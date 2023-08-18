@@ -1,0 +1,106 @@
+﻿<h1>圖片辨識</h1>
+<div class="container">
+    <div class="form-group">
+        <labe>圖片上傳</labe>
+        <input class="form-control" id="unloadImage" type="file" accept="image/*" />
+    </div>
+    <div class="form-group">
+        <img id="imgPreview" src="~/img/noimage.png" class="img-thumbnail" />
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="analyze()">辨識</button>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        var arrayBuffer = null;
+        $("#unloadImage").on("change", function () {
+            var file = this.files[0];
+            var allowFileType = "image.*" //所有image的檔案
+            if (file.type.match(allowFileType)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    ArrayBuffer = this.result;
+                    var blob = new Blob([ArrayBuffer], { type: "image/jpeg" });
+                    var urlCreater = window.URL || window.webkitURL;
+                    var objectUrl = urlCreater.createObjectURL(blob);
+                    $("#imgPreview").attr("src", objectUrl);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            else
+                alert("檔案格式錯誤!")
+        })
+        function analyze() {
+            $("#imgPreview").attr("src", $("#imageUrl").val())
+            // alert("success")
+            // var params = {
+            //     // Request parameters
+            //     "visualFeatures": "Description,Tags",
+            //     // "details": "{string}",
+            //     "language": "en",
+            //     "model-version": "latest",
+            // };
+
+
+            $.ajax({
+                url: "https://mist150team04selfvision-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/c980b3e2-e19c-419f-8786-940ffc24e3d5/classify/iterations/Iteration2/image",
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+                    xhrObj.setRequestHeader("Prediction-Key", "d16bf2cfff2e48409be43e43338694b8");
+                },
+                type: "POST",
+                // Request body
+                processData: false,
+                data: ArrayBuffer,
+            })
+                .done(function (data) {
+                    alert(JSON.stringify(data));
+
+                    // alert(`內容: ${text}，信心指數: ${(confidence * 100).toFixed(2)}%`)
+                })
+                .fail(function () {
+                    alert("error");
+                });
+        };
+                // function analyze() {
+                //     $("#imgPreview").attr("src", $("#imageUrl").val());
+                //     // alert("success")
+                //     var params = {
+                //         // Request parameters
+                //         "visualFeatures": "Description,Tags",
+                //         // "details": "{string}",
+                //         "language": "en",
+                //         "model-version": "latest",
+                //     };
+
+                //     var apiUrl = "https://team04testing.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params);
+
+                //     fetch(apiUrl, {
+                //         method: "POST",
+                //         headers: {
+                //             "Content-Type": "application/octet-stream",
+                //             "Ocp-Apim-Subscription-Key": "8ba989c60e184486aaccceee45c0e4b7",
+                //         },
+                //         body: arrayBuffer,
+                //     })
+                //         .then(response => {
+                //             if (!response.ok) {
+                //                 throw new Error("Network response was not ok");
+                //             }
+                //             return response.json();
+                //         })
+                //         .then(data => {
+                //             // alert(JSON.stringify(data));
+                //             const text = data['description']['captions'][0]['text'];
+                //             const confidence = data['description']['captions'][0]['confidence'];
+                //             alert(`內容: ${text}，信心指數: ${(confidence * 100).toFixed(2)}%`);
+                //         })
+                //         .catch(error => {
+                //             console.error("Fetch Error:", error);
+                //             alert("error");
+                //         });
+                // };
+    </script>
+}

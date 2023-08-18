@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewData["Title"] = "Vision";
+}
+
+<h1>圖片辨識</h1>
+<div class="container">
+    <div class="form-group">
+        <labe >圖片網址</labe>
+        <input id="imageUrl" type="text" class="form-control" value="https://www.daysoftheyear.com/cdn-cgi/image/dpr=1%2Cf=auto%2Cfit=cover%2Cheight=675%2Cq=85%2Cwidth=1200/wp-content/uploads/international-black-cat-awareness-month-e1575287719521.jpg" />
+    </div>
+    <div class="form-group">
+        <img id="imgPreview" src="~/img/noimage.png" class="img-thumbnail"/>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="analzye()">進行分析</button>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        function analzye() {
+            $("#imgPreview").attr("src", $("#imageUrl").val())
+            // alert("success")
+            var params = {
+                // Request parameters
+                "visualFeatures": "Description,Tags",
+                // "details": "{string}",
+                "language": "en",
+                "model-version": "latest",
+                };
+            var data = {
+                url: $("#imageUrl").val()
+
+            };
+
+            $.ajax({
+                url: "https://team04testing.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "8ba989c60e184486aaccceee45c0e4b7");
+                },
+                type: "POST",
+                // Request body
+                data: JSON.stringify(data),
+            })
+                .done(function (data) {
+                    // alert(JSON.stringify(data));
+                    const text = data['description']['captions'][0]['text'];
+                    const confidence = data['description']['captions'][0]['confidence']
+                    alert(`內容: ${text}，信心指數: ${(confidence*100).toFixed(2)}%`)
+                })
+                .fail(function () {
+                    alert("error");
+                });
+        };
+    </script>
+}
