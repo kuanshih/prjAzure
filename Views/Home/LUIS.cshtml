@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewData["Title"] = "LUIS";
+}
+
+<h1>LUIS</h1>
+
+<label>輸入:</label>
+<input id="content" type="text" value="青荼" />
+<input id="Go" type="button" value="Go" onclick="Check()" />
+
+@section Scripts{
+    <script>
+        function Check() {
+            var data = {
+                "kind": "Conversation",
+                "analysisInput": {
+                    "conversationItem": {
+                        "id": "1",
+                        "text": $("#content").val(),
+                        "modality": "text",
+                        "language": "zh-hant",
+                        "participantId": "1"
+                    }
+                },
+                "parameters": {
+                    "projectName": "ordermodel1",
+                    "verbose": true,
+                    "deploymentName": "ordersystem",
+                    "stringIndexType": "TextElement_V8"
+                }
+            };
+            $.ajax({
+                url: "https://msit150team04textanalyze.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview",
+                beforeSend: function (xhrObj) {
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "63e8c23690a847fb9d1f08679c844119");
+                    xhrObj.setRequestHeader("Apim-Request-Id", "4ffcac1c-b2fc-48ba-bd6d-b69d9942995a");
+                },
+                type: "POST",
+                data: JSON.stringify(data),
+
+            }).done(function (data) {
+
+                alert(JSON.stringify(data));
+            });    
+        }
+
+    </script>
+}

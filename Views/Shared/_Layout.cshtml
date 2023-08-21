@@ -34,6 +34,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="VisionCustom">VisionCustom</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LUIS">LUIS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="contentModerator">contentModerator</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="textCheck">textCheck</a>
+                        </li>
+                        <li class="nav-item">
+                            <img src="~/img/robot.png" onclick="window.open('@Url.Content("~/WebBot.html")'),'網站客服' , 'width=450, height=500' " title="網站克服" style="width:40px;height:40px"/>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

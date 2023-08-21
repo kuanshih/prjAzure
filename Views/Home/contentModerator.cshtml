@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "contentModerator";
+}
+
+<h1>contentModerator</h1>
+
+<div class="container">
+    <div class="form-group">
+        <labe>圖片網址</labe>
+        <input id="imageUrl" type="text" class="form-control" value="https://cdn2.ettoday.net/images/5503/5503549.jpg" />
+    </div>
+    <div class="form-group">
+        <img id="imgPreview" src="~/img/noimage.png" class="img-thumbnail" />
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="analzye()">辨識</button>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        function analzye() {
+            $("#imgPreview").attr("src", $("#imageUrl").val())
+            // alert("success")
+            var params = {
+                CacheImage: false,
+            };
+            var data = {
+                "DataRepresentation": "URL",
+                "Value": $("#imageUrl").val()
+            };
+
+            $.ajax({
+                url: "https://mist150team04contentmoderator04.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate?" + $.param(params),
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "23b852382dbd4698a4167b5c250db4d1");
+                },
+                type: "POST",
+                // Request body
+                data: JSON.stringify(data),
+            })
+                .done(function (data) {
+                     alert(JSON.stringify(data));
+                //     const text = data['description']['captions'][0]['text'];
+                //     const confidence = data['description']['captions'][0]['confidence']
+                //     alert(`內容: ${text}，信心指數: ${(confidence * 100).toFixed(2)}%`)
+                // })
+                // .fail(function () {
+                //     alert("error");
+                });
+        };
+    </script>
+}
+

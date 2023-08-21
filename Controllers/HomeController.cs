@@ -30,6 +30,18 @@ namespace prjAzureVisionAnlyze.Controllers
         {
             return View();
         }
+        public IActionResult LUIS()
+        {
+            return View();
+        }
+        public IActionResult contentModerator()
+        {
+            return View();
+        }
+        public IActionResult textCheck()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
